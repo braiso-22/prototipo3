@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject obstaclePrefab;
-    private Vector3 spawnPos = new Vector3(25, 0, 0);
+    public GameObject[] obstaclePrefabList;
+    private int maximoPrefabs;
+    private Vector3 spawnPos = new Vector3(25, 3, 0);
     private float startDelay = 0;
     private float repeatRate = 1;
     private PlayerController playerControllerScript;
     void Start()
     {
+        maximoPrefabs = obstaclePrefabList.Length;
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
         Invoke("randomSpawnObstacle", startDelay);
@@ -26,7 +28,8 @@ public class Spawner : MonoBehaviour
     {
         if (!playerControllerScript.gameOver)
         {
-            Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
+            int aleatorio = Random.Range(0, maximoPrefabs);
+            Instantiate(obstaclePrefabList[aleatorio], spawnPos, obstaclePrefabList[aleatorio].transform.rotation);
             Invoke("randomSpawnObstacle", startDelay);
         }
 
