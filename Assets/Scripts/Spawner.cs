@@ -6,17 +6,30 @@ public class Spawner : MonoBehaviour
 {
     public GameObject obstaclePrefab;
     private Vector3 spawnPos = new Vector3(25, 0, 0);
-    private float startDelay = 2;
-    private float repeatRate = 2;
+    private float startDelay = 0;
+    private float repeatRate = 1;
+    private PlayerController playerControllerScript;
     void Start()
     {
-        InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
-        Instantiate(obstaclePrefab, spawnPos,
-       obstaclePrefab.transform.rotation);
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        Invoke("randomSpawnObstacle", startDelay);
+
     }
-    void SpawnObstacle()
+    void randomSpawnObstacle()
     {
-        Instantiate(obstaclePrefab, spawnPos,
-       obstaclePrefab.transform.rotation);
+        repeatRate = Random.Range(0.5f, 2);
+        Invoke("spawnObstacle", repeatRate);
+
     }
+    void spawnObstacle()
+    {
+        if (!playerControllerScript.gameOver)
+        {
+            Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
+            Invoke("randomSpawnObstacle", startDelay);
+        }
+
+    }
+
 }
