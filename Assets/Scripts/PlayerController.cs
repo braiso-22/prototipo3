@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     public float jumpForce;
     public float gravityModifier;
-    public bool isOnGround = true;
+    public bool isOnGround;
     public bool gameOver = false;
-    private int saltosPosibles = 2;
+    private int saltosPosibles;
     private Animator playerAnim;
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
         playerAnim = GetComponent<Animator>();
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
+        saltosPosibles = 2;
     }
 
     // Update is called once per frame
@@ -31,17 +32,18 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnGround = false;
+            saltosPosibles -= 1;
             playerAnim.SetTrigger("Jump_trig");
             dirtParticle.Stop();
             playerAudio.PlayOneShot(jumpSound, 1.0f);
-            saltosPosibles--;
+
         }
-        if (saltosPosibles <= 0 && isOnGround) saltosPosibles = 2;
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("ground"))
         {
+            saltosPosibles = 2;
             isOnGround = true;
             dirtParticle.Play();
         }
